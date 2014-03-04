@@ -1,8 +1,15 @@
-package rp13.search.problem.puzzle;
+package eight;
 
 
+import interfaces.Puzzle;
+import eight.EightPuzzle.PuzzleMove;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+
+import util.SearchNode;
 
 /**
  * 
@@ -15,7 +22,7 @@ import java.util.Random;
  * @author Nick Hawes
  * 
  */
-public class EightPuzzle {
+public class EightPuzzle implements Puzzle<EightPuzzle, PuzzleMove>{
 
 	/**
 	 * Explicit enumeration of moves the blank tile can take.
@@ -53,9 +60,15 @@ public class EightPuzzle {
 		 * @return
 		 */
 		public static PuzzleMove randomMove() {
-			return VALUES[RANDOM.nextInt(SIZE)];
-		}
 
+			// fix for https://github.com/hawesie/rp-search/issues/3
+			// using Math.max to make sure -1 is never return (which is a
+			// mathematical possibility)
+			int pick = (int) Math.max(
+					Math.ceil(RANDOM.nextDouble() * SIZE) - 1, 0);
+
+			return VALUES[pick];
+		}
 	}
 
 	/**
@@ -85,6 +98,11 @@ public class EightPuzzle {
 		m_board = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, BLANK };
 		m_blankPosition = m_board.length - 1;
 	}
+	
+	public EightPuzzle(int[] board) {
+		m_board = board;
+		m_blankPosition = m_board.length - 1;
+	}
 
 	/**
 	 * Create a new eight puzzle by copying the given puzzle
@@ -95,6 +113,38 @@ public class EightPuzzle {
 		m_board = Arrays.copyOf(_that.m_board, _that.m_board.length);
 		m_blankPosition = _that.m_blankPosition;
 	}
+	
+	/**
+	 * Creates an eight puzzle with the pieces in the correct order
+	 * 
+	 * @return Returns an ordered Eight Puzzle.
+	 */
+	public static EightPuzzle orderedEightPuzzle() {
+		return new EightPuzzle();
+	}
+
+	/**
+	 * Creates a randomised eight puzzle using the given number of random moves.
+	 * 
+	 * @return Returns a random (but legal) Eight Puzzle.
+	 */
+	public static EightPuzzle randomEightPuzzle(int _moves) {
+		EightPuzzle puzzle = new EightPuzzle();
+		for (int i = 0; i < _moves; i++) {
+			puzzle.randomMove();
+		}
+		return puzzle;
+	}
+
+	/**
+	 * Creates a randomised eight puzzle.
+	 * 
+	 * @return Returns a random (but legal) Eight Puzzle.
+	 */
+	public static EightPuzzle randomEightPuzzle() {
+		return randomEightPuzzle(WIDTH * WIDTH * WIDTH);
+	}
+
 
 	/**
 	 * Slide the blank tile randomly once.
@@ -104,7 +154,7 @@ public class EightPuzzle {
 		boolean moveMade = false;
 		while (!moveMade) {
 			PuzzleMove move = PuzzleMove.randomMove();
-			moveMade = makeMove(move);
+			moveMade = performAction(move);
 		}
 	}
 
@@ -141,8 +191,8 @@ public class EightPuzzle {
 	 *            The move to make.
 	 * @return Returns true if the move was possible, else false.
 	 */
-	public boolean makeMove(PuzzleMove _move) {
-		if (isPossibleMove(_move)) {
+	public boolean performAction(PuzzleMove _move) {
+		if(isPossibleMove(_move)){
 			// where should the blank end up
 			int newBlankPosition = m_blankPosition + _move.m_move;
 			// get the piece that was in that position
@@ -155,20 +205,25 @@ public class EightPuzzle {
 		} else {
 			return false;
 		}
-	}
 	
-	public EightPuzzle undoMove(PuzzleMove _move) {
-			EightPuzzle e = new EightPuzzle(this);
-			// where should the blank end up
-			int newBlankPosition = e.m_blankPosition - _move.m_move;
-			// get the piece that was in that position
-			int toSwapWith = e.m_board[newBlankPosition];
-			// then swap them around
-			e.m_board[newBlankPosition] = BLANK;
-			e.m_board[m_blankPosition] = toSwapWith;
-			e.m_blankPosition = newBlankPosition;
-			return e;
 		
+	}
+
+	
+	@Override
+	public boolean equals(Object _that) {
+		if (_that instanceof EightPuzzle) {
+			EightPuzzle that = (EightPuzzle) _that;
+
+			// cheapest comparison first
+			if (this.m_blankPosition == that.m_blankPosition) {
+				// compare both boards
+				return Arrays.equals(this.m_board, that.m_board);
+			}
+		}
+
+		return false;
+
 	}
 
 	@Override
@@ -196,65 +251,59 @@ public class EightPuzzle {
 
 	}
 
-	@Override
-	public boolean equals(Object _that) {
-		if (_that instanceof EightPuzzle) {
-			EightPuzzle that = (EightPuzzle) _that;
+	/**
+	 * Returns a String representation of the Eight Puzzle on a single line.
+	 * 
+	 * @return A one-line representation of the EightPuzzle.
+	 */
+	public String toSingleLineString() {
+		StringBuilder sb = new StringBuilder();
 
-			// cheapest comparison first
-			if (this.m_blankPosition == that.m_blankPosition) {
-				// compare both boards
-				return Arrays.equals(this.m_board, that.m_board);
+		for (int i = 0; i < m_board.length; i++) {
+			if (m_board[i] == BLANK) {
+				sb.append("X");
+			} else {
+				sb.append(m_board[i]);
 			}
 		}
 
-		return false;
-
+		return sb.toString();
 	}
 
-	/**
-	 * Creates an eight puzzle with the pieces in the correct order
-	 * 
-	 * @return
-	 */
-	public static EightPuzzle orderedEightPuzzle() {
-		return new EightPuzzle();
+
+
+
+
+	@Override
+	public boolean isGoal(EightPuzzle goal) {
+		return equals(goal);
 	}
 
-	/**
-	 * Creates a randomised eight puzzle using the given number of random moves.
-	 * 
-	 * @return
-	 */
-	public static EightPuzzle randomEightPuzzle(int _moves) {
-		EightPuzzle puzzle = new EightPuzzle();
-		for (int i = 0; i < _moves; i++) {
-			puzzle.randomMove();
-		}
-		return puzzle;
-	}
-
-	/**
-	 * Creates a randomised eight puzzle.
-	 * 
-	 * @return
-	 */
-	public static EightPuzzle randomEightPuzzle() {
-		return randomEightPuzzle(WIDTH * WIDTH * WIDTH);
-	}
-
-	public static void main(String[] args) {
+	@Override
+	public List<SearchNode<EightPuzzle, PuzzleMove>> getSuccessors(SearchNode<EightPuzzle, PuzzleMove> s) {
+		ArrayList<SearchNode<EightPuzzle, PuzzleMove>> successors = new ArrayList<SearchNode<EightPuzzle, PuzzleMove>>();
 		
-		EightPuzzle puzzle = EightPuzzle.orderedEightPuzzle();
-
-		System.out.println(puzzle);
-
-		for (PuzzleMove move : PuzzleMove.values()) {
-			puzzle.makeMove(move);
-			System.out.println(move);
-			System.out.println(puzzle);
+		EightPuzzle current = s.getState();
+		
+		for(PuzzleMove move : PuzzleMove.values()){
+			if(isPossibleMove(move)){
+				EightPuzzle successor = new EightPuzzle(this);
+				successor.performAction(move);
+				successors.add(new SearchNode<EightPuzzle, PuzzleMove>(s, move, successor));
+			}
 		}
-
+		
+		return successors;
 	}
+
+	@Override
+	public int h(){
+		int h = 0;
+		for(int i = 0; i < 8; i++){
+			if(m_board[i] != i+1) h++;
+		}
+		return h;
+	}
+
 
 }
