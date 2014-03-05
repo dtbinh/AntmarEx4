@@ -13,7 +13,7 @@ import eight.EightPuzzle.PuzzleMove;
 
 public class Test {
 	public static void main(String[] args){
-		new EightPuzzle(new int[] { 8, 6, 7, 2, 5, 4, 3, 0, 1 });
+		//new EightPuzzle(new int[] { 8, 6, 7, 2, 5, 4, 3, 0, 1 });
 //		
 //		EightPuzzle p = EightPuzzle.randomEightPuzzle(10);
 //		Search<EightPuzzle, PuzzleMove> s = new Search<EightPuzzle, PuzzleMove>(0, new EightPuzzle(p) , EightPuzzle.orderedEightPuzzle());

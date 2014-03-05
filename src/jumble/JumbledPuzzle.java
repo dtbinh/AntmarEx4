@@ -46,12 +46,12 @@ public class JumbledPuzzle implements Puzzle<JumbledPuzzle, JumbledMove> {
 		}
 		j.setPossibleMoves();
 		return j;
-		
+
 	}
-	
-	public void setPossibleMoves(){
-		for(int i = 0; i < wordLength-1; i++){
-			for(int j = i+1; j < wordLength; j++){
+
+	public void setPossibleMoves() {
+		for (int i = 0; i < wordLength - 1; i++) {
+			for (int j = i + 1; j < wordLength; j++) {
 				moves.add(new JumbledMove(i, j));
 			}
 		}
@@ -61,18 +61,7 @@ public class JumbledPuzzle implements Puzzle<JumbledPuzzle, JumbledMove> {
 		int swapA = new Random().nextInt(wordLength);
 		int swapB = (new Random().nextInt(wordLength - 1) + 1 + swapA)
 				% wordLength;
-		makeMove(swapA, swapB);
-	}
-
-	public boolean isPossibleMove() {
-		return true;
-	}
-
-	public boolean makeMove(int swapA, int swapB) {
-		char temp = word[swapA];
-		word[swapA] = word[swapB];
-		word[swapB] = temp;
-		return true;
+		performAction(new JumbledMove(swapA, swapB));
 	}
 
 	@Override
@@ -99,7 +88,6 @@ public class JumbledPuzzle implements Puzzle<JumbledPuzzle, JumbledMove> {
 		return this.wordLength;
 	}
 
-
 	@Override
 	public int h() {
 		int h = 0;
@@ -107,44 +95,47 @@ public class JumbledPuzzle implements Puzzle<JumbledPuzzle, JumbledMove> {
 			if (initial.charAt(i) != word[i])
 				h++;
 		}
-		
+
 		return 0;
 	}
 
 	@Override
 	public boolean performAction(JumbledMove action) {
-		int swapA = action.getA();
-		int swapB = action.getB();
-		
-		char temp = word[swapA];
-		word[swapA] = word[swapB];
-		word[swapB] = temp;
-		return true;
+		if (isPossibleMove(action)) {
+			int swapA = action.getA();
+			int swapB = action.getB();
+
+			char temp = word[swapA];
+			word[swapA] = word[swapB];
+			word[swapB] = temp;
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public boolean isGoal(JumbledPuzzle goal) {
-		
+
 		return equals(goal);
 	}
 
 	@Override
 	public List<SearchNode<JumbledPuzzle, JumbledMove>> getSuccessors(
 			SearchNode<JumbledPuzzle, JumbledMove> s) {
-			ArrayList<SearchNode<JumbledPuzzle, JumbledMove>> successors = new ArrayList<SearchNode<JumbledPuzzle, JumbledMove>>();
-			for(JumbledMove m : moves){
-				JumbledPuzzle successor = new JumbledPuzzle(this);
-				successor.performAction(m);
-				
-				successors.add(new SearchNode<JumbledPuzzle, JumbledMove>(s, m, successor));
-			}
+		ArrayList<SearchNode<JumbledPuzzle, JumbledMove>> successors = new ArrayList<SearchNode<JumbledPuzzle, JumbledMove>>();
+		for (JumbledMove m : moves) {
+			JumbledPuzzle successor = new JumbledPuzzle(this);
+			successor.performAction(m);
+
+			successors.add(new SearchNode<JumbledPuzzle, JumbledMove>(s, m,
+					successor));
+		}
 		return successors;
 	}
 
 	@Override
 	public boolean isPossibleMove(JumbledMove action) {
-		// TODO Auto-generated method stub
-		return true;
+		return action.getA() < word.length && action.getB() < word.length;
 	}
 
 }

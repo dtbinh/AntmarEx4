@@ -99,9 +99,9 @@ public class EightPuzzle implements Puzzle<EightPuzzle, PuzzleMove>{
 		m_blankPosition = m_board.length - 1;
 	}
 	
-	public EightPuzzle(int[] board) {
+	public EightPuzzle(int[] board, int blankPos) {
 		m_board = board;
-		m_blankPosition = m_board.length - 1;
+		m_blankPosition = blankPos;
 	}
 
 	/**
