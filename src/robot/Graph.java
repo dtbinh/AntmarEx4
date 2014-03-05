@@ -67,6 +67,8 @@ public class Graph {
 
 	public void createBlockage(int x1, int y1, int x2, int y2) {
 		// assert(x1 == x2 || y1 == y2);
+		y1 = height -1 - y1;
+		y2 = height -1 - y2;
 		if (x1 == x2) {
 
 			graph[x1 + Math.min(y1, y2) * width].setSouth(null);
@@ -80,14 +82,14 @@ public class Graph {
 	}
 
 	public GraphNode getNode(int x, int y) {
-		return graph[x + y * width];
+		return graph[x + (height -1 - y) * width];
 	}
 
 	public String toString() {
 
 		String mid;
 		String bot;
-		String res = "#####################\n";
+		String res = "#########################################\n";
 		for (int y = 0; y < height; y++) {
 			mid = "#";
 			bot = "#";
@@ -106,7 +108,7 @@ public class Graph {
 				}
 
 				if (y == height - 1) {
-					bot = "#####################";
+					bot = "#########################################";
 				} else {
 
 				}
