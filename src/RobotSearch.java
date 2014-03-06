@@ -27,15 +27,25 @@ public class RobotSearch {
 
 		System.out.println(g.toString());
 		
-		Search<RobotPuzzle, RobotMove> search = new Search<RobotPuzzle, RobotMove>(2, new RobotPuzzle(
-				g, 0, 0, 9, 6), new RobotPuzzle(g, 9, 6, 0, 0));
+		System.out.println("DepthFirst");
+		Search<RobotPuzzle, RobotMove> search = new Search<RobotPuzzle, RobotMove>(1, new RobotPuzzle(
+				g, 0, 0, 9, 6));
 		
 		System.out.println(search.findSolution());
 		
-		search = new Search<RobotPuzzle, RobotMove>(1, new RobotPuzzle(
-				g, 0, 0, 9, 6), new RobotPuzzle(g, 9, 6, 0, 0));
+		
+		System.out.println("BreadthFirst");
+		 search = new Search<RobotPuzzle, RobotMove>(0, new RobotPuzzle(
+				g, 0, 0, 9, 6));
 		
 		System.out.println(search.findSolution());
+		
+		System.out.println("A*");
+		 search = new Search<RobotPuzzle, RobotMove>(2, new RobotPuzzle(
+				g, 0, 0, 9, 6));
+		
+		System.out.println(search.findSolution());
+		
 		
 		
 		
@@ -49,21 +59,21 @@ public class RobotSearch {
 
 		System.out.println("Depth-First Search");
 		Search<RobotPuzzle, RobotMove> RobotSearchD = new Search<RobotPuzzle, RobotMove>(
-				1, new RobotPuzzle(rPuzzle), rGoal);
+				1, new RobotPuzzle(rPuzzle));
 		path = RobotSearchD.findSolution();
 		System.out.println();
 		System.out.println(path);
 		System.out.println();
 		System.out.println("Breadth-First Search");
 		Search<RobotPuzzle, RobotMove> RobotSearchB = new Search<RobotPuzzle, RobotMove>(
-				0, new RobotPuzzle(rPuzzle), rGoal);
+				0, new RobotPuzzle(rPuzzle));
 		path = RobotSearchB.findSolution();
 		System.out.println();
 		System.out.println(path);
 		System.out.println();
 		System.out.println("A* Search");
 		Search<RobotPuzzle, RobotMove> RobotSearchA = new Search<RobotPuzzle, RobotMove>(
-				2, new RobotPuzzle(rPuzzle), rGoal);
+				2, new RobotPuzzle(rPuzzle));
 		path = RobotSearchA.findSolution();
 		System.out.println();
 		System.out.println(path);

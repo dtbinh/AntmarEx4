@@ -15,10 +15,9 @@ public class Search<P extends Puzzle<P, A>, A> {
 	private P initial;
 	private P goal;
 
-	public Search(int searchType, P initial, P goal) {
+	public Search(int searchType, P initial) {
 		super();
 		this.initial = initial;
-		this.goal = goal;
 
 		if (searchType == 1) {
 			frontier = new StackAgenda<SearchNode<P, A>>();
@@ -44,7 +43,7 @@ public class Search<P extends Puzzle<P, A>, A> {
 			
 			current = frontier.pop();
 			explored.push(current);	
-			if (current.getState().isGoal(goal)) {
+			if (current.getState().isGoal()) {
 				found = true;
 				System.out.println("found");
 				return path(current);

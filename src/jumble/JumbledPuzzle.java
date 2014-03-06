@@ -113,10 +113,16 @@ public class JumbledPuzzle implements Puzzle<JumbledPuzzle, JumbledMove> {
 		return false;
 	}
 
-	@Override
 	public boolean isGoal(JumbledPuzzle goal) {
 
 		return equals(goal);
+	}
+	public boolean isGoal() {
+			boolean g = true;
+			for(int i = 0; i < word.length; i++){
+				if(word[i] != initial.charAt(i)) g = false;
+			}
+		return g;
 	}
 
 	@Override

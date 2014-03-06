@@ -274,9 +274,12 @@ public class EightPuzzle implements Puzzle<EightPuzzle, PuzzleMove>{
 
 
 
-	@Override
 	public boolean isGoal(EightPuzzle goal) {
 		return equals(goal);
+	}
+	
+	public boolean isGoal() {
+		return this.equals(EightPuzzle.orderedEightPuzzle());
 	}
 
 	@Override

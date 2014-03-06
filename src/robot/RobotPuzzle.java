@@ -93,10 +93,8 @@ public class RobotPuzzle implements Puzzle<RobotPuzzle, RobotMove> {
 	}
 	
 	
-	@Override
-	public boolean isGoal(RobotPuzzle goal) {
-		
-		return equals(goal);
+	public boolean isGoal() {
+		return location.equals(goal);
 	}
 
 	@Override
@@ -116,5 +114,10 @@ public class RobotPuzzle implements Puzzle<RobotPuzzle, RobotMove> {
 		
 		
 		return successors;
+	}
+
+	public boolean isGoal(RobotPuzzle goal) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
