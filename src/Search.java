@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,6 @@ public class Search<P extends Puzzle<P, A>, A> {
 	private Agenda<SearchNode<P, A>> explored;
 	private List<SearchNode<P, A>> successors;
 	private P initial;
-	private P goal;
 
 	public Search(int searchType, P initial) {
 		super();
